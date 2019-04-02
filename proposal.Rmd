@@ -1,0 +1,13 @@
+---
+title: "proposal"
+output: html_document
+author: Carter Athens, Max Ruehle, Zihao Han
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+```
