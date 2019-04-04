@@ -1,13 +1,67 @@
 ---
 title: "proposal"
 output: html_document
-author: Carter Athens, Max Ruehle, Zihao Han
+authors: Carter Athens, Max Ruehle, Zihao Han
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
 
+Team members: Carter Athens, Max Ruehle, Zihao Han
+
+Project coordinator: Carter Athens
+
+
+Link to the data source: https://www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps
+```{r}
+AppleStore <- read.csv(file="AppleStore.csv", header=TRUE, sep=",")
+summary(AppleStore)
+head(AppleStore)
 ```
+
+
+```{r}
+# The currency column only contains the value "USD" so it was dropped. Also columns vpp_lic, ver, and id are unnecessary/ meaningless. Then we need to drop any rows that contain invalid info.
+
+df = subset(AppleStore, select = -c(currency, vpp_lic, ver, id))
+dfCleaned <- df[complete.cases(df), ]
+```
+
+
+Overview of the data set: This data set contains details from over 7,000 Apple iOS mobile apps. These details will help us understand what makes an app successful. The columns that we are interested in are listed below.
+
+"track_name": App Name
+
+"size_bytes": Size (in Bytes)
+
+"price": Price amount
+
+"rating_count_tot": User Rating counts (for all version)
+
+"rating_count_ver": User Rating counts (for current version)
+
+"user_rating" : Average User Rating value (for all version)
+
+"user_rating_ver": Average User Rating value (for current version)
+
+"cont_rating": Content Rating
+
+"prime_genre": Primary Genre
+
+"sup_devices.num": Number of supporting devices
+
+"ipadSc_urls.num": Number of screenshots showed for display
+
+"lang.num": Number of supported languages
+
+
+Some questions this data set can answer:
+Does the size of the app matter in comparison to its ratings?
+How does genre relate to the ratings of the app? Do games on average get higher ratings?
+Which genre has the lowest ratings?
+Do certain genres of apps typically cost more than others?
+Do games with more supported devices get higher ratings? More ratings?
+Does the number of supported languages matter to ratings?
+Do certain genres of apps have more supported languages?
