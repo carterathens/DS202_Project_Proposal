@@ -1,0 +1,97 @@
+---
+title: "proposal"
+output: html_document
+authors: Carter Athens, Max Ruehle, Zihao Han
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Team members: Carter Athens, Max Ruehle, Zihao Han
+
+Project coordinator: Carter Athens
+
+
+Link to the data source: https://www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps
+```{r}
+AppleStore <- read.csv(file="AppleStore.csv", header=TRUE, sep=",")
+summary(AppleStore)
+head(AppleStore)
+```
+
+
+```{r}
+# The currency column only contains the value "USD" so it was dropped. Also columns vpp_lic, ver, and id are unnecessary/ meaningless. Then we need to drop any rows that contain invalid info.
+
+df = subset(AppleStore, select = -c(currency, vpp_lic, ver, id))
+dfCleaned <- df[complete.cases(df), ]
+```
+
+
+Overview of the data set: This data set contains details from over 7,000 Apple iOS mobile apps. These details will help us understand what makes an app successful. The columns that we are interested in are listed below.
+
+"track_name": App Name
+
+"size_bytes": Size (in Bytes)
+
+"price": Price amount
+
+"rating_count_tot": User Rating counts (for all version)
+
+"rating_count_ver": User Rating counts (for current version)
+
+"user_rating" : Average User Rating value (for all version)
+
+"user_rating_ver": Average User Rating value (for current version)
+
+"cont_rating": Content Rating
+
+"prime_genre": Primary Genre
+
+"sup_devices.num": Number of supporting devices
+
+"ipadSc_urls.num": Number of screenshots showed for display
+
+"lang.num": Number of supported languages
+
+
+Some questions this data set can answer:
+Does the size of the app matter in comparison to its ratings?
+How does genre relate to the ratings of the app? Do games on average get higher ratings?
+Which genre has the lowest ratings?
+what does the app usually cost? Do certain genres of apps typically cost more than others?
+```{R}
+library(ggplot2)
+library(dplyr)
+ggplot(dfCleaned,aes(x=price))+geom_histogram()
+a<-dfCleaned%>%filter(price<=30)%>%filter(price>0)
+ggplot(a,aes(x=price))+geom_histogram(bins = 60)
+ggplot(a,aes(x=price,colour=prime_genre))+geom_histogram(bins = 60)+theme_light()+theme(legend.background = element_rect(fill="gray90", size=.5, linetype="dotted"),legend.justification=c(1,1), legend.position=c(1,1),legend.text = element_text( size = 9),panel.grid =element_blank())
+
+ggplot(a,aes(x=prime_genre,y=price,colour=prime_genre))+geom_boxplot()+scale_x_discrete(breaks=NULL)+theme(legend.title = element_text(color="18", size=9, face="bold"))+theme_light()+theme(legend.text = element_text(color="azure4", size = 7, face = "bold"))
+summary(dfCleaned$price)
+summary(a$price)
+
+
+```
+
+Do games with more supported devices get higher ratings? More ratings?
+Does the number of supported languages matter to ratings?
+Do certain genres of apps have more supported languages?
+```{r}
+ggplot(dfCleaned,aes(x=lang.num))+geom_histogram()
+
+b<-dfCleaned%>%filter(lang.num>=20)
+
+ggplot(b,aes(y=lang.num,x= prime_genre))+geom_boxplot()+ coord_flip()+theme_light()
+
+```
+price comparation for each medical apps
+```{R}
+#	Social Networking
+c<-dfCleaned%>%filter(prime_genre=='Medical')%>%filter(X!=3633)
+c$price<-sort(c$price)
+ggplot(c,aes(x=track_name,y=price))+geom_path()+ geom_jitter()+coord_polar()
+```
