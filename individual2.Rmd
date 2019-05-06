@@ -1,0 +1,94 @@
+---
+title: "Carter Athens Data Exploration"
+output: html_document
+authors: Carter Athens, Max Ruehle, Zihao Han
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Team members: Carter Athens, Max Ruehle, Zihao Han
+
+Project coordinator: Carter Athens
+
+
+Link to the data source: https://www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+#library(tidyverse)
+library(readxl)
+AppleStore <- read.csv(file="AppleStore.csv", header=TRUE, sep=",")
+```
+
+
+```{r}
+# The currency column only contains the value "USD" so it was dropped. Also columns vpp_lic, ver, and id are unnecessary/ meaningless. Then we need to drop any rows that contain invalid info.
+
+df = subset(AppleStore, select = -c(currency, vpp_lic, ver, id))
+dfCleaned <- df[complete.cases(df), ]
+```
+
+
+Overview of the data set: This data set contains details from over 7,000 Apple iOS mobile apps. These details will help us understand what makes an app successful. The columns that we are interested in are listed below.
+
+"track_name": App Name
+"size_bytes": Size (in Bytes)
+"price": Price amount
+"rating_count_tot": User Rating counts (for all version)
+"rating_count_ver": User Rating counts (for current version)
+"user_rating" : Average User Rating value (for all version)
+"user_rating_ver": Average User Rating value (for current version)
+"cont_rating": Content Rating
+"prime_genre": Primary Genre
+"sup_devices.num": Number of supporting devices
+"ipadSc_urls.num": Number of screenshots showed for display
+"lang.num": Number of supported languages
+
+
+```{r}
+free <- dfCleaned %>% filter(price == 0.00)
+paid <- dfCleaned %>% filter(price != 0.00)
+
+df_type <- paid %>% group_by(prime_genre) %>% summarize(mean_rating = mean(user_rating), mean_size = mean(size_bytes), mean_price = mean(price), mean_supp_devices = mean(sup_devices.num), mean_lang = mean(lang.num), Number_of_apps = n())
+
+df_type1 <- paid %>% group_by(prime_genre) %>% summarize(mean_rating_count_tot = mean(rating_count_tot), mean_size = mean(size_bytes), mean_price = mean(price), mean_supp_devices = mean(sup_devices.num), mean_lang = mean(lang.num), Number_of_apps = n())
+
+df_social <- dfCleaned %>% filter(prime_genre == "Social Networking")
+df_social1 <- dfCleaned %>% filter(track_name == "Facebook" | track_name == "Twitter" | track_name == "Instagram" | track_name == "Snapchat")
+
+df_music <- dfCleaned %>% filter(prime_genre == "Music")
+df_music1 <- dfCleaned %>% filter(track_name == "Spotify Music" | track_name == "Pandora - Music & Radio" | track_name == "Google Play Music" | track_name == "SoundCloud - Music & Audio")
+
+df_freeType <- free %>% group_by(prime_genre) %>% summarize(mean_rating = mean(user_rating), mean_size = mean(size_bytes), mean_price = mean(price), mean_supp_devices = mean(sup_devices.num), mean_lang = mean(lang.num), Number_of_apps = n())
+
+df_freeType1 <- free %>% group_by(prime_genre) %>% summarize(mean_rating_count_tot = mean(rating_count_tot), mean_size = mean(size_bytes), mean_price = mean(price), mean_supp_devices = mean(sup_devices.num), mean_lang = mean(lang.num), Number_of_apps = n())
+```
+
+Do free apps have less user ratings than paid apps? then go on and talk about different genres and maybe then the ratings of the relevant genres from the last.
+
+Free apps have significantly more ratings than paid apps with the exception of Medical apps.
+```{r}
+ggplot(df_freeType1, aes(x=prime_genre, y=mean_rating_count_tot)) + geom_col(aes(fill=factor(`prime_genre`)), show.legend=FALSE) + theme(axis.text.x = element_text(hjust = 1, size=12), axis.text.y = element_text(size=12)) + xlab("Genre") + ylab("Mean Rating Total Count") + ggtitle("Mean Rating Total Count Per Genre w/ Free Apps") + coord_flip() + scale_y_continuous(limits = c(0, 75000))
+
+ggplot(df_type1, aes(x=prime_genre, y=mean_rating_count_tot)) + geom_col(aes(fill=factor(`prime_genre`)), show.legend=FALSE) + theme(axis.text.x = element_text(hjust = 1, size=12), axis.text.y = element_text(size=12)) + xlab("Genre") + ylab("Mean Rating Total Count") + ggtitle("Mean Rating Total Count Per Genre w/ Paid Apps") + coord_flip() + scale_y_continuous(limits = c(0, 75000))
+```
+
+Looks like paid apps generally have slightly higher mean ratings but sometimes they are lower. Paid Navigation and Book apps have significantly higher mean ratings than free apps.
+```{r}
+ggplot(df_freeType, aes(x=prime_genre, y=mean_rating)) + geom_col(aes(fill=factor(`prime_genre`)), show.legend=FALSE) + theme(axis.text.x = element_text(angle = 45, hjust = 1, size=12), axis.text.y = element_text(size=12)) + xlab("Genre") + ylab("Mean Rating") + ggtitle("Mean Rating Per Genre w/ Free Apps") + scale_y_continuous(limits = c(0, 5))
+
+ggplot(df_type, aes(x=prime_genre, y=mean_rating)) + geom_col(aes(fill=factor(`prime_genre`)), show.legend=FALSE) + theme(axis.text.x = element_text(angle = 45, hjust = 1, size=12), axis.text.y = element_text(size=12)) + xlab("Genre") + ylab("Mean Rating") + ggtitle("Mean Rating Per Genre w/ Paid Apps") + scale_y_continuous(limits = c(0, 5))
+
+#Paid Book, Business,  Catalogs, Education, Finance, Navigation, and Shopping Apps are rated higher than free apps.
+#Compare big social media apps like facebook, snapchat, twitter, instagram
+```
+
+```{r}
+ggplot(df_social1, aes(x=track_name, y=user_rating)) + geom_col(aes(fill=factor(`track_name`)), show.legend=FALSE) + xlab("App Name") + ylab("User Rating") + ggtitle("User Ratings of Popular Social Media Apps")
+
+ggplot(df_music1, aes(x=track_name, y=user_rating)) + geom_col(aes(fill=factor(`track_name`)), show.legend=FALSE) + xlab("App Name") + ylab("User Rating") + ggtitle("User Ratings of Popular Music Apps")
+```
