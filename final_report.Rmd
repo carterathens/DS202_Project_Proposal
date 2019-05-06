@@ -152,6 +152,11 @@ ggplot(a,aes(x=prime_genre,y=price,colour=prime_genre))+geom_boxplot()+scale_x_d
 
 This graph shows the same apps as the histogram, but as boxplots for price based on their genre. The largest box is the Medical genre. There are very little medical apps but they vary in price by a lot.
 
+### Personal Contributions
+Carter Athens: I helped with the initial proposal of the project by finding the data set and cleaning it. I explored data involving the average ratings of each app genre for paid and unpaid apps to find out how they compare. I explored how some of our most frequently used apps, mainly social media and music apps, compare to each other and other apps of their type. I explored data about the average total rating count of each genre. I also created some of the slides for the presentation.
+
+
+
 ### Conclusion
 Productivity apps are, on average, the highest rated apps.
 The mean ratings for paid apps are, on average, higher than free apps.
