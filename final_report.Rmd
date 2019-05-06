@@ -156,6 +156,9 @@ This graph shows the same apps as the histogram, but as boxplots for price based
 Carter Athens: I helped with the initial proposal of the project by finding the data set and cleaning it. I explored data involving the average ratings of each app genre for paid and unpaid apps to find out how they compare. I explored how some of our most frequently used apps, mainly social media and music apps, compare to each other and other apps of their type. I explored data about the average total rating count of each genre. I also created some of the slides for the presentation.
 
 
+### Works Cited
+Ramanathan. "Mobile App Store ( 7200 Apps)." Kaggle, 10 June 2018, www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps.
+
 
 ### Conclusion
 Productivity apps are, on average, the highest rated apps.
