@@ -104,9 +104,21 @@ This table shows a lite and a paid version of an app. It shows that even though 
 
 #### How do some of our most frequently used apps, mainly social media and music apps, compare to each other and other apps of their type?
 ```{r}
+df_social <- dfCleaned %>% filter(prime_genre == "Social Networking")
+df_social1 <- dfCleaned %>% filter(track_name == "Facebook" | track_name == "Twitter" | track_name == "Instagram" | track_name == "Snapchat")
 
+ggplot(df_social1, aes(x=track_name, y=user_rating)) + geom_col(aes(fill=factor(`track_name`)), show.legend=FALSE) + xlab("App Name") + ylab("User Rating") + ggtitle("User Ratings of Popular Social Media Apps")
+
+summary(df_social$user_rating)
+
+df_music <- dfCleaned %>% filter(prime_genre == "Music")
+df_music1 <- dfCleaned %>% filter(track_name == "Spotify Music" | track_name == "Pandora - Music & Radio" | track_name == "Google Play Music" | track_name == "SoundCloud - Music & Audio")
+
+ggplot(df_music1, aes(x=track_name, y=user_rating)) + geom_col(aes(fill=factor(`track_name`)), show.legend=FALSE) + xlab("App Name") + ylab("User Rating") + ggtitle("User Ratings of Popular Music Apps")
+
+summary(df_music$user_rating)
 ```
-
+Of the four big social media apps, Instagram has the best ratings while Snapchat has the lowest. The average rating of all social media apps is 2.985, meaning Snapchat was actually below average. Spotify has the highest ratings of the four music apps, while Google Play Music has the slowest. The average rating of all music apps is 3.978, so Google Play Music was the only app that was below average.
 
 
 
