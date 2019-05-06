@@ -153,8 +153,10 @@ ggplot(a,aes(x=prime_genre,y=price,colour=prime_genre))+geom_boxplot()+scale_x_d
 This graph shows the same apps as the histogram, but as boxplots for price based on their genre. The largest box is the Medical genre. There are very little medical apps but they vary in price by a lot.
 
 ### Conclusion
-
-
-
-
-
+Productivity apps are, on average, the highest rated apps.
+The mean ratings for paid apps are, on average, higher than free apps.
+People actually buy apps that cost more than $50.
+Of the four big social media apps, Instagram has the best ratings while Snapchat has the lowest.
+Spotify has the highest ratings of the four music apps, while Google Play Music has the lowest.
+The price of apps are skewed heavily right.
+There are lots of free apps.
