@@ -103,7 +103,7 @@ This table shows a lite and a paid version of an app. It shows that even though 
 
 
 #### How do some of our most frequently used apps, mainly social media and music apps, compare to each other and other apps of their type?
-```{r}
+```{r, echo = FALSE}
 df_social <- dfCleaned %>% filter(prime_genre == "Social Networking")
 df_social1 <- dfCleaned %>% filter(track_name == "Facebook" | track_name == "Twitter" | track_name == "Instagram" | track_name == "Snapchat")
 
