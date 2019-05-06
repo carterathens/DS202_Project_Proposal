@@ -1,0 +1,148 @@
+---
+title: "Final Report"
+output: html_document
+authors: Carter Athens, Max Ruehle, Zihao Han
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Team members: Carter Athens, Max Ruehle, Zihao Han
+
+## Project coordinator: Carter Athens
+
+
+
+This dataset is composed of 7194 apps on the Apple App Store. There are many different variables set to each app, such as its rating, number of ratings, and genre. The dataset was found on Kaggle
+
+
+Link to the data source: https://www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps
+
+### Loading in the data
+```{r}
+AppleStore <- read.csv(file="AppleStore.csv", header=TRUE, sep=",")
+head(AppleStore, 5)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+```
+
+
+### Cleaning the data
+The currency column only contains the value "USD" so it was dropped. Also columns vpp_lic, ver, and id are unnecessary/ meaningless. Then we need to drop any rows that contain invalid info.
+
+```{r}
+df = subset(AppleStore, select = -c(currency, vpp_lic, ver, id))
+dfCleaned <- df[complete.cases(df), ]
+```
+
+
+
+
+### Some questions this data set can answer
+
+Which types of apps get the best ratings?
+
+Do free apps or paid apps get better ratings?
+
+How do some of our most frequently used apps, mainly social media and music apps, compare to each other and other apps of their type?
+
+What are some very expensive apps and how they compare to the rest of the apps?
+
+What are some visualizations for apps and ratings based on their price?
+
+
+
+### Challenges faced
+
+The number of downloads for each app was not available.
+  This would have been nice to see the ratio of downloads to number of ratings.
+
+This dataset only included Apple App Store apps.
+  Google Play Store apps were not included.
+  
+This dataset only contains the price and rating that are useful to analysis
+  Once we get deeper analysis such as what influence the data, we find out that we don't have enough data
+
+Some of the Apps' name track_name in this dataset are shown as some unrecognizable characters and become useless.
+
+
+
+### Findings
+
+#### Which types of apps get the best ratings?
+```{r, echo = FALSE}
+df_type <- dfCleaned %>% group_by(prime_genre) %>% summarize(mean_rating = mean(user_rating), mean_size = mean(size_bytes), mean_price = mean(price), mean_supp_devices = mean(sup_devices.num), mean_lang = mean(lang.num), Number_of_apps = n())
+
+
+df_type %>% ggplot(aes(x=reorder(prime_genre, -mean_rating), y = mean_rating)) + geom_bar(stat = 'identity') + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(title = 'Mean Rating by Genre', x = 'App Genre', y = 'Mean Rating')
+
+```
+
+As seen by the chart above, the top three app genres are Productivity, Music, and Photo & Video. Productivity apps are the highest probably because people get them to complete a task, and are usually satisfied if it helped. 
+
+
+#### Do free apps or paid apps get better ratings?
+```{r, echo = FALSE}
+df_cost <- dfCleaned %>% mutate(price = replace(price, price > 0, 'Paid')) %>% mutate(price = replace(price, price == 0, 'Free')) %>% mutate(price = as.factor(price)) %>% group_by(price) %>% summarize(mean_rating = mean(user_rating), total_ratings = sum(rating_count_tot), number_of_apps = n(), mean_num_of_ratings = mean(rating_count_tot))
+df_cost
+```
+
+On average, paid apps got better ratings than free apps did. This is most likely due to the fact that if people spend money on an app, they usually want to feel satisfied with it. They will then give the app a nice rating.
+
+```{r, echo = FALSE}
+dfCleaned %>% subset(track_name == 'iSwap Faces' | track_name == 'iSwap Faces LITE') %>% select(track_name, price, rating_count_tot, user_rating)
+```
+
+This table shows a lite and a paid version of an app. It shows that even though the free version got much more ratings, the paid version got better ratings. When people get the full product, they tend to be happier.
+
+
+#### How do some of our most frequently used apps, mainly social media and music apps, compare to each other and other apps of their type?
+```{r}
+
+```
+
+
+
+
+#### What are some very expensive apps and how they compare to the rest of the apps?
+```{r, echo = FALSE}
+dfCleaned %>% subset(price>50) %>% select(track_name, prime_genre, price, user_rating) %>% ggplot(aes(x = reorder(track_name, -price), y = price)) + geom_bar(stat = 'identity') + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(title = 'Most Expensive Apps', x = 'App Name', y = 'Price')
+```
+
+These are the 7 most expensive apps on the App Store. Four of them are education apps. The top two apps are augmented and alternative communication apps, both with 4.0 ratings. The 814 ratings for the two top apps equates to $205,541.86 spent. That is just the money spent for the people who rated the apps. We don't know how many people downloaded apps to know how much money was actually spent on the app.
+
+
+
+What are some visualizations for apps and ratings based on their price?
+```{r, echo=FALSE}
+ggplot(dfCleaned,aes(x=price))+geom_histogram(bins = 100)
+```
+This is a histogram of the price of all apps. It is heavily skewed right with most apps costing nothing.
+
+```{r, echo = FALSE}
+a<-dfCleaned%>%filter(price<=30)%>%filter(price>0)
+
+ggplot(a,aes(x=price,colour=prime_genre))+geom_histogram(bins = 60)+theme_light()+theme(legend.background = element_rect(fill="gray90", size=.5, linetype="dotted"),legend.justification=c(1,1), legend.position=c(1,1),legend.text = element_text( size = 9),panel.grid =element_blank())
+
+```
+
+This graph shows a visual of apps priced greater than $0 and less than $30 based on their genre. A large chunck of the apps are games. This visual is still skewed right, meaning more apps are closer to $1.
+
+```{r, echo = FALSE}
+ggplot(a,aes(x=prime_genre,y=price,colour=prime_genre))+geom_boxplot()+scale_x_discrete(breaks=NULL)+theme(legend.title = element_text(color="18", size=9, face="bold"))+theme_light()+theme(legend.text = element_text(color="azure4", size = 7, face = "bold"))
+```
+
+This graph shows the same apps as the histogram, but as boxplots for price based on their genre. The largest box is the Medical genre. There are very little medical apps but they vary in price by a lot.
+
+### Conclusion
+
+
+
+
+
