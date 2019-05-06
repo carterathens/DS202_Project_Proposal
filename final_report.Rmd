@@ -152,10 +152,20 @@ ggplot(a,aes(x=prime_genre,y=price,colour=prime_genre))+geom_boxplot()+scale_x_d
 
 This graph shows the same apps as the histogram, but as boxplots for price based on their genre. The largest box is the Medical genre. There are very little medical apps but they vary in price by a lot.
 
+```{r, echo=FALSE}
+c<-dfCleaned%>%filter(prime_genre=='Medical')%>%filter(X!=3633)
+c$price<-sort(c$price)
+ggplot(c,aes(x=track_name,y=price))+geom_path()+ geom_jitter()+coord_polar()
+```
+This visualization shows the medical apps based on their price. It is interesting because medical apps are some of the most expensive apps. Many apps are floating around the $5 to $20 range.
+
+
 ### Personal Contributions
 Carter Athens: I helped with the initial proposal of the project by finding the data set and cleaning it. I explored data involving the average ratings of each app genre for paid and unpaid apps to find out how they compare. I explored how some of our most frequently used apps, mainly social media and music apps, compare to each other and other apps of their type. I explored data about the average total rating count of each genre. I also created some of the slides for the presentation.
 
 Zihao Han:I set up the ppt.At the begining of the presentation part, we have face the proble that this data set might have too much limits but I make some of the question in to multiple part so that we could break down the question and also we can tell everyone that what we did and how we thought in each part. The thinking procese of how we came up and solve the questions is the most improtant part. So I did the data analysis of the price of the apps.For this part, I did the summary of the data and see how is the statistical part tells us then do the visualization that tells us how it looks. I did the average price of apps analysis first, and will I put the "colour=prime_gener"in to the ggplot, the other question cames up, "is there any relationship between app type and price?". then I do the gern vs. price analysis. and it show the "medical" cost more money than others, so I did the price vs. each medical app visualiation. While I do the analysis, I found that there are alot unrecongnized app in the data, so I went back do the data clean.
+
+Max Ruehle: For this project, I initially helped with setting up and organizing the outline for the presentation. I took 5 of the questions that we had on the project proposal and edited them a bit to get the five questions that we ended up answering. Of the questions, I worked on the which apps got the best ratings, paid vs free apps, and the expensive apps. The most difficult part was how to visualize the free vs paid apps but in the end it ended up working out. 
 
 
 ### Works Cited
